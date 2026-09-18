@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&amp;family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Jost:wght@300;400;500&amp;display=swap">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: #F6F0E4; color: #092322; font-family: 'Jost', 'Avenir Next', 'Segoe UI', sans-serif; font-weight: 300; font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    *, *::before, *::after { box-sizing: border-box; }
+    img { max-width: 100%; display: block; }
+    a { color: #8A5E33; } a:hover { color: #092322; }
+
+    .wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding-left: clamp(22px, 5vw, 56px); padding-right: clamp(22px, 5vw, 56px); }
+    .section { padding-top: clamp(64px, 9vw, 128px); padding-bottom: clamp(64px, 9vw, 128px); }
+    .eyebrow { font-family: 'Cinzel', 'Trajan Pro', Georgia, serif; font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase; margin: 0; }
+    .display { font-family: 'Cormorant Garamond', 'Cormorant', Georgia, serif; font-weight: 400; line-height: 1.08; margin: 0; }
+    h2.display { font-weight: 700; }
+    .rule { width: 56px; height: 1px; background: #A77B4B; border: 0; margin: 0; }
+
+    .hero { position: relative; height: clamp(560px, 58vw, 780px); display: flex; flex-direction: column; color: #F6F0E4; overflow: hidden; }
+    .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
+    .hero-scrim { position: absolute; inset: 0; background: rgba(9, 35, 34, 0.62); }
+    .topbar { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 26px; padding-bottom: 26px; }
+    .topbar a { color: #F6F0E4; text-decoration: none; }
+    .topbar a:hover { color: #D9B684; }
+    .hero-body { position: relative; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 26px; padding-bottom: 48px; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 34px; font-family: 'Cinzel', Georgia, serif; font-size: 12.5px; letter-spacing: 0.26em; text-transform: uppercase; text-decoration: none; border: 1px solid #C9A06A; cursor: pointer; transition: background .25s, color .25s; }
+    .btn-light { background: transparent; color: #F6F0E4; }
+    .btn-light:hover { background: #C9A06A; color: #092322; }
+    .btn-solid { background: #092322; color: #F6F0E4; border-color: #092322; width: 100%; }
+    .btn-solid:hover { background: #8A5E33; border-color: #8A5E33; color: #F6F0E4; }
+    .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible { outline: 2px solid #A77B4B; outline-offset: 3px; }
+
+    .intro { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: clamp(36px, 6vw, 96px); align-items: start; }
+    .timeline { display: flex; flex-direction: column; gap: 0; border-top: 1px solid #D8CBB3; }
+    .timeline-row { display: flex; gap: 24px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid #D8CBB3; }
+    .timeline-when { flex: 0 0 118px; color: #8A5E33; }
+
+    .occasions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; list-style: none; margin: 0; padding: 0; }
+    .occasions li { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: clamp(22px, 2.6vw, 30px); color: #F6F0E4; display: flex; align-items: center; gap: 28px; }
+    .occasions li + li::before { content: ""; width: 5px; height: 5px; transform: rotate(45deg); background: #C9A06A; display: inline-block; }
+
+    .gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(10px, 1.4vw, 18px); }
+    .gallery figure { margin: 0; overflow: hidden; }
+    .gallery img { width: 100%; height: 100%; object-fit: cover; }
+    .g-wide { grid-column: span 12; aspect-ratio: 21 / 9; }
+    .g-half { grid-column: span 6; aspect-ratio: 4 / 3; }
+
+    .inquire { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); background: #FBF7EF; border: 1px solid #E2D6C0; }
+    .inquire-aside { background: #092322; color: #F6F0E4; display: flex; flex-direction: column; }
+    .inquire-aside-text { padding: clamp(32px, 5vw, 60px); display: flex; flex-direction: column; gap: 20px; flex-grow: 1; }
+    .inquire-aside img { width: 100%; height: clamp(320px, 42vw, 480px); object-fit: cover; object-position: 80% center; }
+    .inquire-form { padding: clamp(28px, 5vw, 60px); }
+    .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 22px 24px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field-full { grid-column: 1 / -1; }
+    .field label { font-family: 'Cinzel', Georgia, serif; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #35504E; }
+    .field input, .field select, .field textarea { width: 100%; min-height: 50px; padding: 12px 14px; font: inherit; font-size: 16px; font-weight: 400; color: #092322; background: #FFFFFF; border: 1px solid #CFC2AA; border-radius: 0; -webkit-appearance: none; appearance: none; }
+    .field textarea { min-height: 120px; resize: vertical; }
+    .field select { background-image: linear-gradient(45deg, transparent 50%, #8A5E33 50%), linear-gradient(135deg, #8A5E33 50%, transparent 50%); background-position: calc(100% - 20px) 22px, calc(100% - 14px) 22px; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 40px; }
+
+    .visit { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(32px, 5vw, 72px); align-items: center; }
+    .map { position: relative; aspect-ratio: 16 / 10; background: #E9DFCB; border: 1px solid #D8CBB3; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+    .sooner { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: clamp(28px, 5vw, 72px); align-items: center; }
+    .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .fact { border-top: 1px solid #A77B4B; padding-top: 14px; }
+
+    .footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px 32px; }
+    .footer a { color: #D9B684; } .footer a:hover { color: #F6F0E4; }
+
+    @media (max-width: 720px) {
+      body { font-size: 16px; }
+      .g-wide { aspect-ratio: 4 / 3; }
+      .g-half { grid-column: span 12; aspect-ratio: 4 / 3; }
+      .topbar-mark { font-size: 11px !important; letter-spacing: 0.22em !important; }
+      .occasions { flex-direction: column; align-items: center; gap: 6px; }
+      .occasions li + li::before { display: none; }
+      .facts { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+      .timeline-row { flex-direction: column; gap: 4px; }
+      .timeline-when { flex-basis: auto; }
+      .footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</helmet>
+
+<div style="width: 100%; min-height: 100%; background: #F6F0E4;">
+
+  <header class="hero">
+    <img class="hero-img" src="./assets/262a23274b10604e8c79e459298e9d68.jpg" alt="The white clubhouse at Equestrian Woods, framed by mature trees">
+    <div class="hero-scrim"></div>
+    <div class="wrap topbar">
+      <a href="#top" class="eyebrow topbar-mark" style="font-size: 13px;">Events at Equestrian Woods</a>
+      <a href="#inquire" class="eyebrow" style="border-bottom: 1px solid #C9A06A; padding-bottom: 4px; min-height: 44px; display: inline-flex; align-items: center;">Inquire</a>
+    </div>
+    <div class="wrap hero-body" id="top">
+      <p class="eyebrow" style="color: #D9B684;">Nicholasville, Kentucky</p>
+      <h1 class="display" style="font-size: clamp(44px, 7.4vw, 104px); letter-spacing: 0.01em;">Events at<br>Equestrian Woods</h1>
+      <hr class="rule" style="background: #C9A06A;">
+      <p style="margin: 0; font-size: clamp(17px, 1.7vw, 21px); max-width: 560px;">Weddings and events are returning to the Club. Opening November 2026.</p>
+      <a href="#inquire" class="btn btn-light">Request Your Date</a>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap intro">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <p class="eyebrow" style="color: #8A5E33;">Opening Soon</p>
+        <h2 class="display" style="font-size: clamp(34px, 4.4vw, 56px);">A beloved clubhouse, thoughtfully renewed.</h2>
+        <p style="margin: 0; max-width: 520px;">The Club at Equestrian Woods is under new ownership, and celebrations are coming home. A light renovation is underway now, and we will be ready to welcome you and your guests this November.</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-row">
+          <span class="eyebrow timeline-when">Now</span>
+          <span>Renovations underway. Inquiries welcome.</span>
+        </div>
+        <div class="timeline-row">
+          <span class="eyebrow timeline-when">November</span>
+          <span>Fully open and accepting reservations.</span>
+        </div>
+        <div class="timeline-row">
+          <span class="eyebrow timeline-when">Your Date</span>
+          <span>Inquire today for first access to the calendar.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #092322; padding: clamp(44px, 6vw, 72px) 0;">
+    <div class="wrap" style="display: flex; flex-direction: column; align-items: center; gap: 22px;">
+      <p class="eyebrow" style="color: #D9B684;">We Host</p>
+      <ul class="occasions">
+        <li>Weddings</li>
+        <li>Receptions</li>
+        <li>Private Events</li>
+        <li>Corporate Meetings</li>
+        <li>and more</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap" style="display: flex; flex-direction: column; gap: clamp(28px, 4vw, 48px);">
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px;">
+        <p class="eyebrow" style="color: #8A5E33;">The Property</p>
+        <h2 class="display" style="font-size: clamp(32px, 4vw, 50px);">Classic Kentucky, in every season.</h2>
+      </div>
+      <div class="gallery">
+        <figure class="g-wide"><img src="./assets/12bf09789061053daf984fe8b0adb6b6.jpg" alt="The clubhouse entrance surrounded by autumn foliage"></figure>
+        <figure class="g-half"><img src="./assets/e9a6b6ebd30c4062c668e0783817ee33.jpg" alt="The event entrance with arched glass doors and lanterns"></figure>
+        <figure class="g-half"><img src="./assets/18ed93e6aeb1ce090aa94a9caedc7a74.jpg" alt="A couple holding a bouquet of white roses"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="inquire" style="padding-bottom: clamp(64px, 9vw, 128px);">
+    <div class="wrap">
+      <div class="inquire">
+        <div class="inquire-aside">
+          <div class="inquire-aside-text">
+            <p class="eyebrow" style="color: #D9B684;">Inquire</p>
+            <h2 class="display" style="font-size: clamp(32px, 3.8vw, 48px);">Request information for your date.</h2>
+            <p style="margin: 0; color: #E5DCCB;">Share a few details and we will be in touch with availability and next steps.</p>
+          </div>
+          <img src="./assets/equestrian woods request infor form image.png" alt="White florals with warm string lights">
+        </div>
+
+        <div class="inquire-form">
+          <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ submit }}">
+              <div class="fields">
+                <div class="field">
+                  <label for="f-name">Full Name</label>
+                  <input id="f-name" name="name" type="text" autocomplete="name" required="">
+                </div>
+                <div class="field">
+                  <label for="f-email">Email</label>
+                  <input id="f-email" name="email" type="email" autocomplete="email" required="">
+                </div>
+                <div class="field">
+                  <label for="f-phone">Phone</label>
+                  <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+                </div>
+                <div class="field">
+                  <label for="f-type">Event Type</label>
+                  <select id="f-type" name="type" required="">
+                    <option value="">Select one</option>
+                    <option>Wedding</option>
+                    <option>Reception</option>
+                    <option>Private Event</option>
+                    <option>Corporate Meeting</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="field field-full">
+                  <label for="f-date">Preferred Date</label>
+                  <input id="f-date" name="date" type="date">
+                </div>
+                <div class="field field-full">
+                  <label for="f-msg">Anything else we should know?</label>
+                  <textarea id="f-msg" name="message" placeholder="Guest count, flexible dates, questions"></textarea>
+                </div>
+                <sc-if value="{{ error }}">
+                  <div class="field-full" role="alert" style="color: #A3402B; font-size: 14px;">{{ error }}</div>
+                </sc-if>
+                <div class="field-full">
+                  <button type="submit" class="btn btn-solid" disabled="{{ sending }}">
+                    <sc-if value="{{ sending }}">Sending...</sc-if>
+                    <sc-if value="{{ notSending }}">Send Inquiry</sc-if>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </sc-if>
+          <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 18px; justify-content: center; min-height: 360px;" role="status">
+              <p class="eyebrow" style="color: #8A5E33;">Thank You</p>
+              <h3 class="display" style="font-size: clamp(30px, 3.4vw, 42px);">Your inquiry is on its way.</h3>
+              <p style="margin: 0;">We will be in touch soon with availability for your date.</p>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #EFE6D5; padding: clamp(64px, 8vw, 112px) 0;">
+    <div class="wrap visit">
+      <div style="display: flex; flex-direction: column; gap: 20px; align-items: flex-start;">
+        <p class="eyebrow" style="color: #8A5E33;">Find Us</p>
+        <h2 class="display" style="font-size: clamp(30px, 3.6vw, 46px);">107 Clubhouse Drive<br>Nicholasville, KY 40356</h2>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=107+Clubhouse+Dr+Nicholasville+KY+40356" target="_blank" rel="noopener" class="eyebrow" style="min-height: 44px; display: inline-flex; align-items: center; border-bottom: 1px solid #A77B4B; text-decoration: none;">Get Directions</a>
+      </div>
+      <div class="map">
+        <svg viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%;" aria-hidden="true">
+          <path d="M-20 300 C 140 250, 220 330, 360 260 S 560 160, 680 190" fill="none" stroke="#FBF7EF" stroke-width="18"></path>
+          <path d="M120 -20 C 160 120, 260 180, 300 420" fill="none" stroke="#FBF7EF" stroke-width="10"></path>
+          <path d="M460 -20 C 430 120, 520 240, 500 420" fill="none" stroke="#FBF7EF" stroke-width="8"></path>
+          <path d="M-20 120 C 120 140, 260 90, 420 130 S 600 60, 680 70" fill="none" stroke="#FBF7EF" stroke-width="6"></path>
+          <circle cx="330" cy="212" r="46" fill="none" stroke="#A77B4B" stroke-width="1" opacity="0.6"></circle>
+          <path d="M330 176 c-15 0 -26 11 -26 25 c0 19 26 45 26 45 s26 -26 26 -45 c0 -14 -11 -25 -26 -25 z" fill="#092322"></path>
+          <circle cx="330" cy="201" r="8" fill="#E9DFCB"></circle>
+        </svg>
+        <span style="position: absolute; left: 14px; bottom: 12px; font-size: 12px; font-weight: 400; color: #35504E; background: #FBF7EF; padding: 4px 10px;">Map placeholder: live Google Map embeds here</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: clamp(56px, 7vw, 96px) 0;">
+    <div class="wrap sooner">
+      <div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
+        <p class="eyebrow" style="color: #8A5E33;">Need Something Sooner?</p>
+        <h2 class="display" style="font-size: clamp(28px, 3.2vw, 40px);">Visit The Show Barn in Harrodsburg, Kentucky.</h2>
+        <a href="https://theshowbarn.com" target="_blank" rel="noopener" class="eyebrow" style="min-height: 44px; display: inline-flex; align-items: center; border-bottom: 1px solid #A77B4B; text-decoration: none;">Explore The Show Barn</a>
+      </div>
+      <div class="facts">
+        <div class="fact">
+          <div class="display" style="font-size: 34px;">10,000+</div>
+          <div style="font-size: 15px;">sq. ft., climate controlled</div>
+        </div>
+        <div class="fact">
+          <div class="display" style="font-size: 34px;">300</div>
+          <div style="font-size: 15px;">guest capacity</div>
+        </div>
+        <div class="fact">
+          <div class="display" style="font-size: 34px;">On-site</div>
+          <div style="font-size: 15px;">boutique cabin lodging</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background: #092322; color: #E5DCCB; padding: 40px 0; font-size: 14px;">
+    <div class="wrap footer">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span class="eyebrow" style="color: #F6F0E4; font-size: 12px;">Events at Equestrian Woods</span>
+        <span>107 Clubhouse Dr, Nicholasville, KY 40356</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 17px;">Part of the Show Barn Collective</span>
+        <span>© 2026 Events at Equestrian Woods</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":4300}}'>
+// EmailJS: fill in your own values from the EmailJS dashboard.
+const EMAILJS_SERVICE_ID = "service_00va7ij";
+const EMAILJS_TEMPLATE_ID = "template_hzm7mqf";
+const EMAILJS_PUBLIC_KEY = "Mi-GrkozRLtT-8Jg5";
+
+class Component extends DCLogic {
+  componentDidMount() {
+    if (window.emailjs) emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  }
+  renderVals() {
+    const sent = !!(this.state && this.state.sent);
+    const sending = !!(this.state && this.state.sending);
+    const error = (this.state && this.state.error) || "";
+    return {
+      sent: sent,
+      notSent: !sent,
+      sending: sending,
+      notSending: !sending,
+      error: error,
+      submit: (e) => {
+        e.preventDefault();
+        if (sending) return;
+        this.setState({ sending: true, error: "" });
+        emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, e.target)
+          .then(() => this.setState({ sent: true, sending: false }))
+          .catch((err) => {
+            console.error("EmailJS send failed:", err);
+            this.setState({ sending: false, error: "Something went wrong sending your inquiry. Please try again." });
+          });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
